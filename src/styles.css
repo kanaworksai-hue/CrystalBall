@@ -808,35 +808,42 @@ button {
   clip-path: inset(50%);
 }
 
-.feather-cursor {
+.finger-cursor {
   position: absolute;
   top: 0;
   left: 0;
   z-index: 9;
   display: none;
-  width: 42px;
-  height: 54px;
+  width: 48px;
+  height: 57px;
   opacity: 0;
   pointer-events: none;
-  transform: translate3d(var(--cursor-x, -80px), var(--cursor-y, -80px), 0) rotate(-18deg);
+  transform: translate3d(var(--cursor-x, -80px), var(--cursor-y, -80px), 0) rotate(-8deg);
   transition: opacity 120ms ease;
 }
 
-.feather-cursor svg {
+.finger-cursor svg {
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.36));
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.42));
 }
 
-.feather-fill {
-  fill: rgba(255, 250, 240, 0.94);
+.finger-shadow {
+  fill: rgba(0, 0, 0, 0.26);
 }
 
-.feather-line {
+.finger-fill {
+  fill: rgba(255, 250, 240, 0.96);
+  stroke: rgba(15, 33, 23, 0.54);
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.finger-line {
   fill: none;
-  stroke: rgba(15, 33, 23, 0.64);
+  stroke: rgba(15, 33, 23, 0.52);
   stroke-linecap: round;
-  stroke-width: 2.2;
+  stroke-width: 1.9;
 }
 
 .is-panel-collapsed .studio-panel {
@@ -868,7 +875,7 @@ button {
     cursor: none;
   }
 
-  .stage:hover .feather-cursor {
+  .stage:hover .finger-cursor {
     display: block;
     opacity: 1;
   }

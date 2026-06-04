@@ -192,7 +192,7 @@ const elements = {
   headlineText: document.querySelector("#headlineText"),
   slideCounter: document.querySelector("#slideCounter"),
   activeAssetName: document.querySelector("#activeAssetName"),
-  featherCursor: document.querySelector("#featherCursor"),
+  fingerCursor: document.querySelector("#fingerCursor"),
   panel: document.querySelector("#studioPanel"),
   panelToggle: document.querySelector("#panelToggle"),
   languageCycle: document.querySelector("#languageCycle"),
@@ -1052,7 +1052,7 @@ function onPointerUp(event) {
 }
 
 function onPointerLeave() {
-  elements.featherCursor.style.opacity = "0";
+  elements.fingerCursor.style.opacity = "0";
   elements.orb.style.setProperty("--orb-tilt-x", "0deg");
   elements.orb.style.setProperty("--orb-tilt-y", "0deg");
 }
@@ -1064,9 +1064,9 @@ function updatePointerVisual(event) {
   const px = clamp(x / rect.width, 0, 1);
   const py = clamp(y / rect.height, 0, 1);
 
-  elements.stage.style.setProperty("--cursor-x", `${x - 8}px`);
-  elements.stage.style.setProperty("--cursor-y", `${y - 6}px`);
-  elements.featherCursor.style.opacity = "1";
+  elements.stage.style.setProperty("--cursor-x", `${x - 20}px`);
+  elements.stage.style.setProperty("--cursor-y", `${y - 8}px`);
+  elements.fingerCursor.style.opacity = "1";
   elements.orb.style.setProperty("--orb-tilt-x", `${(0.5 - py) * 8}deg`);
   elements.orb.style.setProperty("--orb-tilt-y", `${(px - 0.5) * 8}deg`);
   document.documentElement.style.setProperty("--orb-shine-x", `${30 + px * 26}%`);
