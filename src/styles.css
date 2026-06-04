@@ -427,6 +427,21 @@ button {
   line-height: 1.5;
 }
 
+.help-link {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 9px;
+  color: var(--gold);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.help-link:hover {
+  color: #fffaf0;
+  text-decoration: underline;
+}
+
 .brand-lockup {
   display: grid;
   gap: 2px;

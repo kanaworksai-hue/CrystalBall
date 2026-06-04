@@ -11,7 +11,6 @@ const DEFAULT_ITEMS = [
     name: "Crystal Motion",
     type: "video",
     url: "public/assets/sample-crystal.mp4",
-    poster: "public/assets/sample-poster.jpg",
     builtin: true
   }
 ];
@@ -45,7 +44,7 @@ const DEFAULT_STATE = {
 const STORAGE_KEY = "crystal-ball-studio-state";
 const DB_NAME = "crystal-ball-studio-media";
 const STORE_NAME = "media";
-const MAX_ITEMS = 5;
+const MAX_ITEMS = 8;
 const FIXED_EYEBROW = "KanaWorks_AI";
 const FOLLOW_URL = "https://x.com/KanaWorks_AI";
 const EFFECT_LIMITS = {
@@ -84,7 +83,9 @@ const LANGUAGES = {
       languageButton: "切换语言",
       helpButton: "操作介绍",
       helpTitle: "操作介绍",
-      helpBody: "上传图片或视频后，左右滑动切换水晶球素材。在“效果”里可以调鱼眼强度、反射、水晶球位置和大小。点兔子按钮可收起或展开编辑界面。",
+      helpBody: "上传最多 8 个图片或视频后，左右滑动切换水晶球素材。在“文字”里修改标题和大小，在“效果”里调鱼眼、反射、坐标和水晶球大小。点兔子按钮可收起或展开编辑界面。",
+      helpGuide: "完整使用说明",
+      helpGuideHref: "docs/usage.html#zh",
       collapsePanel: "收起编辑面板",
       expandPanel: "展开编辑面板",
       selectAsset: "选择素材",
@@ -121,7 +122,9 @@ const LANGUAGES = {
       languageButton: "Switch language",
       helpButton: "How to use",
       helpTitle: "How to use",
-      helpBody: "Upload images or videos, then swipe left or right to switch crystal media. In Effects you can tune fisheye strength, reflection, orb position, and orb size. Tap the rabbit button to hide or show the editor.",
+      helpBody: "Upload up to 8 images or videos, then swipe left or right to switch crystal media. In Text, edit the title and size. In Effects, tune fisheye, reflection, coordinates, and orb size. Tap the rabbit button to hide or show the editor.",
+      helpGuide: "Full user guide",
+      helpGuideHref: "docs/usage.html#en",
       collapsePanel: "Hide editor",
       expandPanel: "Show editor",
       selectAsset: "Select asset",
@@ -158,7 +161,9 @@ const LANGUAGES = {
       languageButton: "言語を切り替え",
       helpButton: "使い方",
       helpTitle: "使い方",
-      helpBody: "画像や動画をアップロードして、左右にスワイプすると水晶玉の素材を切り替えられます。「効果」では魚眼強度、反射、水晶玉の位置と大きさを調整できます。ウサギボタンで編集画面を閉じたり開いたりできます。",
+      helpBody: "画像や動画を最大 8 個までアップロードできます。左右にスワイプして水晶玉の素材を切り替え、「文字」でタイトルとサイズ、「効果」で魚眼、反射、座標、水晶玉サイズを調整できます。ウサギボタンで編集画面を開閉できます。",
+      helpGuide: "詳しい使い方",
+      helpGuideHref: "docs/usage.html#ja",
       collapsePanel: "編集パネルを閉じる",
       expandPanel: "編集パネルを開く",
       selectAsset: "素材を選択",
@@ -190,6 +195,7 @@ const elements = {
   languageCycle: document.querySelector("#languageCycle"),
   helpButton: document.querySelector("#helpButton"),
   helpPopover: document.querySelector("#helpPopover"),
+  helpGuideLink: document.querySelector("#helpGuideLink"),
   assetStrip: document.querySelector("#assetStrip"),
   orbUpload: document.querySelector("#orbUpload"),
   backgroundUpload: document.querySelector("#backgroundUpload"),
@@ -932,6 +938,7 @@ function applyLanguage(updateSceneText) {
   elements.languageCycle.textContent = dictionary.label;
   elements.languageCycle.setAttribute("aria-label", dictionary.ui.languageButton);
   elements.helpButton.setAttribute("aria-label", dictionary.ui.helpButton);
+  elements.helpGuideLink.href = dictionary.ui.helpGuideHref;
   elements.followLink.textContent = dictionary.ui.follow;
   elements.stage.setAttribute("aria-label", dictionary.ui.stageLabel);
   elements.panel.setAttribute("aria-label", dictionary.ui.panelLabel);
@@ -1137,7 +1144,7 @@ function restoreBuiltinItem(item) {
     ...(builtin || {}),
     ...item,
     url: builtin?.url || item.url,
-    poster: builtin?.poster || item.poster
+    poster: builtin?.poster || ""
   };
 }
 
