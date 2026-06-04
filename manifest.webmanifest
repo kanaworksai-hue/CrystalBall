@@ -1,0 +1,9 @@
+{
+  "name": "CrystalBall Studio",
+  "short_name": "CrystalBall",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0f2117",
+  "theme_color": "#0f2117",
+  "orientation": "portrait"
+}

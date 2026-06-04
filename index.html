@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0f2117" />
+    <title>CrystalBall Studio</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell" id="appShell">
+      <main class="stage" id="stage" aria-label="水晶球预览">
+        <div class="media-underlay" aria-hidden="true">
+          <img id="backgroundImage" alt="" />
+          <video id="backgroundVideo" muted loop playsinline preload="metadata"></video>
+          <div class="underlay-veil"></div>
+        </div>
+
+        <section class="scene-copy" aria-live="polite">
+          <p class="eyebrow" id="eyebrowText">KanaWorks_AI</p>
+          <h1 id="headlineText">水晶球影像</h1>
+        </section>
+
+        <section class="orb-zone" aria-label="水晶球内容">
+          <div class="crystal-orb" id="crystalOrb">
+            <canvas id="orbCanvas" aria-hidden="true"></canvas>
+            <div class="orb-fallback" id="orbFallback" aria-hidden="true"></div>
+            <div class="orb-caustic" aria-hidden="true"></div>
+            <div class="orb-reflection" aria-hidden="true"></div>
+            <div class="orb-rim" aria-hidden="true"></div>
+          </div>
+          <div class="orb-shadow" aria-hidden="true"></div>
+        </section>
+
+        <div class="scene-status" aria-live="polite">
+          <span id="slideCounter">1/2</span>
+          <span id="activeAssetName"></span>
+        </div>
+
+        <a class="follow-link" id="followLink" href="https://x.com/KanaWorks_AI" target="_blank" rel="noopener noreferrer">
+          want more? follow me
+        </a>
+
+        <button class="rabbit-toggle" id="panelToggle" type="button" aria-label="收起编辑面板" aria-expanded="true">
+          <img src="public/assets/panel-toggle-logo.png" alt="" />
+        </button>
+
+        <div class="feather-cursor" id="featherCursor" aria-hidden="true">
+          <svg viewBox="0 0 54 70">
+            <path class="feather-fill" d="M41 3C23.5 8.1 10.8 22.2 7.4 39.8 5.2 51.2 10.7 62.6 20 67.1c-1.3-9.6 1.5-19 7.1-26.8 4.7-6.5 10.2-11.2 17-17.3C47.4 20 49.2 15.5 48 10.9 47.1 7.5 44.9 4.8 41 3Z" />
+            <path class="feather-line" d="M20 67.1c4.2-18.4 13.4-31.4 27.2-45.3" />
+            <path class="feather-line" d="M25.7 49.4 12.9 46" />
+            <path class="feather-line" d="M30.7 40.8 16 36.8" />
+            <path class="feather-line" d="M36.2 32.6 21.9 28" />
+          </svg>
+        </div>
+      </main>
+
+      <aside class="studio-panel" id="studioPanel" aria-label="编辑面板">
+        <header class="panel-header">
+          <div class="brand-lockup">
+            <strong>CrystalBall</strong>
+            <span>Studio</span>
+          </div>
+          <div class="panel-tools">
+            <button class="help-button" id="helpButton" type="button" aria-label="操作介绍" aria-expanded="false">?</button>
+            <button class="language-cycle" id="languageCycle" type="button" aria-label="切换语言">中文</button>
+          </div>
+          <div class="help-popover" id="helpPopover" hidden>
+            <strong data-i18n="helpTitle">操作介绍</strong>
+            <p data-i18n="helpBody">上传图片或视频后，左右滑动切换水晶球素材。在“效果”里可以调鱼眼强度、反射、水晶球位置和大小。点兔子按钮可收起或展开编辑界面。</p>
+          </div>
+        </header>
+
+        <nav class="panel-tabs" role="tablist" aria-label="编辑分类">
+          <button class="tab-button is-active" type="button" role="tab" aria-selected="true" data-tab="media">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 5h14v14H5z" />
+              <path d="m8 15 3-3 2 2 2-3 3 4" />
+              <circle cx="9" cy="9" r="1.2" />
+            </svg>
+            <span data-i18n="tabMedia">媒体</span>
+          </button>
+          <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="text">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 7V5h14v2" />
+              <path d="M12 5v14" />
+              <path d="M9 19h6" />
+            </svg>
+            <span data-i18n="tabText">文字</span>
+          </button>
+          <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="effects">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3v4" />
+              <path d="M12 17v4" />
+              <path d="M3 12h4" />
+              <path d="M17 12h4" />
+              <path d="m5.6 5.6 2.8 2.8" />
+              <path d="m15.6 15.6 2.8 2.8" />
+              <path d="m18.4 5.6-2.8 2.8" />
+              <path d="m8.4 15.6-2.8 2.8" />
+            </svg>
+            <span data-i18n="tabEffects">效果</span>
+          </button>
+        </nav>
+
+        <section class="panel-page is-active" data-panel="media">
+          <div class="field-row">
+            <label class="file-button" for="orbUpload">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 5v14" />
+                <path d="M5 12h14" />
+              </svg>
+              <span data-i18n="addCrystal">添加水晶球素材</span>
+            </label>
+            <input id="orbUpload" class="visually-hidden" type="file" accept="image/*,video/*" multiple />
+          </div>
+
+          <div class="asset-strip" id="assetStrip" aria-label="水晶球素材列表"></div>
+
+          <div class="field-block">
+            <label class="toggle-row" for="syncBackground">
+              <input id="syncBackground" type="checkbox" />
+              <span data-i18n="syncBackground">同步底层展示</span>
+            </label>
+          </div>
+
+          <div class="field-row">
+            <label class="file-button secondary" for="backgroundUpload">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 6h16v12H4z" />
+                <path d="m7 15 3-3 2 2 2-3 3 4" />
+              </svg>
+              <span data-i18n="uploadBackground">上传底层媒体</span>
+            </label>
+            <input id="backgroundUpload" class="visually-hidden" type="file" accept="image/*,video/*" />
+          </div>
+        </section>
+
+        <section class="panel-page" data-panel="text">
+          <label class="input-field">
+            <span data-i18n="headlineLabel">标题</span>
+            <input id="headlineInput" type="text" maxlength="40" />
+          </label>
+          <label class="range-field">
+            <span data-i18n="textSizeLabel">文字大小</span>
+            <input id="textSizeRange" type="range" min="50" max="150" step="1" />
+            <output id="textSizeOutput">100%</output>
+          </label>
+        </section>
+
+        <section class="panel-page" data-panel="effects">
+          <label class="range-field">
+            <span data-i18n="fisheyeLabel">鱼眼强度</span>
+            <input id="fisheyeRange" type="range" min="-100" max="200" step="1" />
+            <output id="fisheyeOutput">72</output>
+          </label>
+          <label class="range-field">
+            <span data-i18n="reflectionLabel">反射</span>
+            <input id="reflectionRange" type="range" min="0" max="100" step="1" />
+            <output id="reflectionOutput">82</output>
+          </label>
+          <label class="range-field">
+            <span data-i18n="zoomLabel">球面缩放</span>
+            <input id="zoomRange" type="range" min="86" max="124" step="1" />
+            <output id="zoomOutput">104</output>
+          </label>
+          <label class="range-field">
+            <span data-i18n="orbXLabel">X 坐标</span>
+            <input id="orbXRange" type="range" min="-320" max="320" step="1" />
+            <output id="orbXOutput">0</output>
+          </label>
+          <label class="range-field">
+            <span data-i18n="orbYLabel">Y 坐标</span>
+            <input id="orbYRange" type="range" min="-460" max="460" step="1" />
+            <output id="orbYOutput">0</output>
+          </label>
+          <div class="coordinate-field">
+            <div class="coordinate-header">
+              <span data-i18n="orbCoordinateLabel">坐标系</span>
+              <output id="orbCoordinateOutput">X 0 / Y 0</output>
+            </div>
+            <div class="coordinate-pad" id="orbCoordinatePad" role="slider" tabindex="0" aria-label="水晶球坐标">
+              <span class="coordinate-axis is-x" aria-hidden="true"></span>
+              <span class="coordinate-axis is-y" aria-hidden="true"></span>
+              <span class="coordinate-point" id="orbCoordinatePoint" aria-hidden="true"></span>
+            </div>
+          </div>
+          <label class="range-field">
+            <span data-i18n="orbSizeLabel">水晶球大小</span>
+            <input id="orbSizeRange" type="range" min="30" max="200" step="1" />
+            <output id="orbSizeOutput">84</output>
+          </label>
+          <div class="button-row">
+            <button class="text-button" id="resetButton" type="button" data-i18n="resetProject">重置项目</button>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>
