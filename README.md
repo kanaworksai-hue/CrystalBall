@@ -17,7 +17,7 @@ CrystalBall Studio は、スマートフォンの縦画面を中心に作られ�
 - PC ではプレビュー上のカーソルが指アイコンになります。
 - タイトルとタイトルサイズを編集できます。
 - 魚眼強度は負値の内凹表現から、強い誇張表現まで調整できます。
-- 反射、球面ズーム、水晶玉サイズ、X/Y 座標、座標パッドを調整できます。
+- 反射、下層ベール、球面ズーム、水晶玉サイズ、X/Y 座標、座標パッドを調整できます。
 - 編集パネルはウサギボタンで開閉できます。
 - UI は日本語、英語、中国語に対応しています。
 - `want more? follow me` から KanaWorks_AI の X アカウントへ移動できます。
@@ -45,7 +45,7 @@ CrystalBall Studio is a portrait-first visual editor for mobile users. It shows 
 - On desktop, the preview cursor appears as a finger icon.
 - Edit the title and title size.
 - Tune fisheye from negative concave distortion to exaggerated positive distortion.
-- Adjust reflection, sphere zoom, orb size, X/Y coordinates, and the coordinate pad.
+- Adjust reflection, lower veil, sphere zoom, orb size, X/Y coordinates, and the coordinate pad.
 - Hide or show the editor with the rabbit button.
 - UI languages: Japanese, English, and Chinese.
 - Use `want more? follow me` to open KanaWorks_AI on X.
@@ -73,7 +73,7 @@ CrystalBall Studio 是一个面向手机竖屏用户的水晶球视觉编辑页�
 - 电脑端预览区域会显示手指光标。
 - 可以编辑标题和标题大小。
 - 鱼眼强度支持负值内凹，也支持正值夸张放大。
-- 可以调整反射、球面缩放、水晶球大小、X/Y 坐标和坐标系拖拽点。
+- 可以调整反射、底层遮罩、球面缩放、水晶球大小、X/Y 坐标和坐标系拖拽点。
 - 编辑面板可以用兔子按钮收起或展开。
 - UI 支持日文、英文、中文。
 - 点击 `want more? follow me` 可以打开 KanaWorks_AI 的 X 账号。

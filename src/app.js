@@ -37,6 +37,7 @@ const DEFAULT_STATE = {
   effects: {
     fisheye: 72,
     reflection: 82,
+    underlayVeil: 35,
     zoom: 104,
     orbX: 0,
     orbY: 0,
@@ -53,6 +54,7 @@ const FOLLOW_URL = "https://x.com/KanaWorks_AI";
 const EFFECT_LIMITS = {
   fisheye: [-100, 200],
   reflection: [0, 100],
+  underlayVeil: [0, 100],
   zoom: [86, 124],
   orbX: [-320, 320],
   orbY: [-460, 460],
@@ -77,6 +79,7 @@ const LANGUAGES = {
       textSizeLabel: "文字大小",
       fisheyeLabel: "鱼眼强度",
       reflectionLabel: "反射",
+      underlayVeilLabel: "底层遮罩",
       zoomLabel: "球面缩放",
       orbYLabel: "Y 坐标",
       orbXLabel: "X 坐标",
@@ -86,7 +89,7 @@ const LANGUAGES = {
       languageButton: "切换语言",
       helpButton: "操作介绍",
       helpTitle: "操作介绍",
-      helpBody: "上传最多 8 个图片或视频后，左右滑动切换水晶球素材。在“文字”里修改标题和大小，在“效果”里调鱼眼、反射、坐标和水晶球大小。点兔子按钮可收起或展开编辑界面。",
+      helpBody: "上传最多 8 个图片或视频后，左右滑动切换水晶球素材。在“文字”里修改标题和大小，在“效果”里调鱼眼、反射、底层遮罩、坐标和水晶球大小。点兔子按钮可收起或展开编辑界面。",
       helpGuide: "完整使用说明",
       helpGuideHref: "docs/usage.html#zh",
       collapsePanel: "收起编辑面板",
@@ -116,6 +119,7 @@ const LANGUAGES = {
       textSizeLabel: "Text size",
       fisheyeLabel: "Fisheye strength",
       reflectionLabel: "Reflection",
+      underlayVeilLabel: "Lower veil",
       zoomLabel: "Sphere zoom",
       orbYLabel: "Y position",
       orbXLabel: "X position",
@@ -125,7 +129,7 @@ const LANGUAGES = {
       languageButton: "Switch language",
       helpButton: "How to use",
       helpTitle: "How to use",
-      helpBody: "Upload up to 8 images or videos, then swipe left or right to switch crystal media. In Text, edit the title and size. In Effects, tune fisheye, reflection, coordinates, and orb size. Tap the rabbit button to hide or show the editor.",
+      helpBody: "Upload up to 8 images or videos, then swipe left or right to switch crystal media. In Text, edit the title and size. In Effects, tune fisheye, reflection, lower veil, coordinates, and orb size. Tap the rabbit button to hide or show the editor.",
       helpGuide: "Full user guide",
       helpGuideHref: "docs/usage.html#en",
       collapsePanel: "Hide editor",
@@ -155,6 +159,7 @@ const LANGUAGES = {
       textSizeLabel: "文字サイズ",
       fisheyeLabel: "魚眼強度",
       reflectionLabel: "反射",
+      underlayVeilLabel: "下層ベール",
       zoomLabel: "球面ズーム",
       orbYLabel: "Y座標",
       orbXLabel: "X座標",
@@ -164,7 +169,7 @@ const LANGUAGES = {
       languageButton: "言語を切り替え",
       helpButton: "使い方",
       helpTitle: "使い方",
-      helpBody: "画像や動画を最大 8 個までアップロードできます。左右にスワイプして水晶玉の素材を切り替え、「文字」でタイトルとサイズ、「効果」で魚眼、反射、座標、水晶玉サイズを調整できます。ウサギボタンで編集画面を開閉できます。",
+      helpBody: "画像や動画を最大 8 個までアップロードできます。左右にスワイプして水晶玉の素材を切り替え、「文字」でタイトルとサイズ、「効果」で魚眼、反射、下層ベール、座標、水晶玉サイズを調整できます。ウサギボタンで編集画面を開閉できます。",
       helpGuide: "詳しい使い方",
       helpGuideHref: "docs/usage.html#ja",
       collapsePanel: "編集パネルを閉じる",
@@ -208,6 +213,7 @@ const elements = {
   textSizeOutput: document.querySelector("#textSizeOutput"),
   fisheyeRange: document.querySelector("#fisheyeRange"),
   reflectionRange: document.querySelector("#reflectionRange"),
+  underlayVeilRange: document.querySelector("#underlayVeilRange"),
   zoomRange: document.querySelector("#zoomRange"),
   orbXRange: document.querySelector("#orbXRange"),
   orbYRange: document.querySelector("#orbYRange"),
@@ -217,6 +223,7 @@ const elements = {
   orbCoordinateOutput: document.querySelector("#orbCoordinateOutput"),
   fisheyeOutput: document.querySelector("#fisheyeOutput"),
   reflectionOutput: document.querySelector("#reflectionOutput"),
+  underlayVeilOutput: document.querySelector("#underlayVeilOutput"),
   zoomOutput: document.querySelector("#zoomOutput"),
   orbXOutput: document.querySelector("#orbXOutput"),
   orbYOutput: document.querySelector("#orbYOutput"),
@@ -592,6 +599,7 @@ function bindControls() {
   [
     ["fisheye", elements.fisheyeRange, elements.fisheyeOutput],
     ["reflection", elements.reflectionRange, elements.reflectionOutput],
+    ["underlayVeil", elements.underlayVeilRange, elements.underlayVeilOutput],
     ["zoom", elements.zoomRange, elements.zoomOutput],
     ["orbX", elements.orbXRange, elements.orbXOutput],
     ["orbY", elements.orbYRange, elements.orbYOutput],
@@ -777,12 +785,14 @@ function renderText() {
 function renderEffects() {
   const fisheye = clampEffect("fisheye", state.effects.fisheye);
   const reflection = clampEffect("reflection", state.effects.reflection);
+  const underlayVeil = clampEffect("underlayVeil", state.effects.underlayVeil ?? DEFAULT_STATE.effects.underlayVeil);
   const zoom = clampEffect("zoom", state.effects.zoom);
   const orbX = clampEffect("orbX", state.effects.orbX ?? DEFAULT_STATE.effects.orbX);
   const orbY = clampEffect("orbY", state.effects.orbY ?? DEFAULT_STATE.effects.orbY);
   const orbSize = clampEffect("orbSize", state.effects.orbSize ?? DEFAULT_STATE.effects.orbSize);
   state.effects.fisheye = fisheye;
   state.effects.reflection = reflection;
+  state.effects.underlayVeil = underlayVeil;
   state.effects.zoom = zoom;
   state.effects.orbX = orbX;
   state.effects.orbY = orbY;
@@ -790,12 +800,14 @@ function renderEffects() {
 
   elements.fisheyeRange.value = fisheye;
   elements.reflectionRange.value = reflection;
+  elements.underlayVeilRange.value = underlayVeil;
   elements.zoomRange.value = zoom;
   elements.orbXRange.value = orbX;
   elements.orbYRange.value = orbY;
   elements.orbSizeRange.value = orbSize;
   elements.fisheyeOutput.value = formatEffectOutput("fisheye", fisheye);
   elements.reflectionOutput.value = formatEffectOutput("reflection", reflection);
+  elements.underlayVeilOutput.value = formatEffectOutput("underlayVeil", underlayVeil);
   elements.zoomOutput.value = formatEffectOutput("zoom", zoom);
   elements.orbXOutput.value = formatEffectOutput("orbX", orbX);
   elements.orbYOutput.value = formatEffectOutput("orbY", orbY);
@@ -806,6 +818,7 @@ function renderEffects() {
   elements.orbCoordinatePad.setAttribute("aria-valuetext", elements.orbCoordinateOutput.value);
 
   document.documentElement.style.setProperty("--reflection-strength", String(reflection / 100));
+  document.documentElement.style.setProperty("--underlay-veil-strength", String(underlayVeil / 100));
   document.documentElement.style.setProperty("--orb-offset-y", `${orbY}px`);
   document.documentElement.style.setProperty("--orb-offset-x", `${orbX}px`);
   document.documentElement.style.setProperty("--orb-size", `${orbSize}%`);
@@ -983,7 +996,7 @@ function isKnownLocalizedHeadline(headline) {
 }
 
 function formatEffectOutput(key, value) {
-  if (key === "orbSize") {
+  if (key === "orbSize" || key === "underlayVeil") {
     return `${value}%`;
   }
   if (key === "orbX" || key === "orbY") {
