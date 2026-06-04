@@ -862,7 +862,11 @@ async function renderActiveOrb() {
 
   if (item.type === "video") {
     orbVideo.src = item.url;
-    orbVideo.poster = item.poster || "";
+    if (item.poster) {
+      orbVideo.poster = item.poster;
+    } else {
+      orbVideo.removeAttribute("poster");
+    }
     renderer?.setSource(orbVideo);
     await playVideo(orbVideo);
   } else {
@@ -897,7 +901,9 @@ function createMediaElement(item, autoplay) {
   if (item.type === "video") {
     const video = document.createElement("video");
     video.src = item.url;
-    video.poster = item.poster || "";
+    if (item.poster) {
+      video.poster = item.poster;
+    }
     video.muted = true;
     video.loop = true;
     video.playsInline = true;
