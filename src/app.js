@@ -23,10 +23,13 @@ const DEFAULT_BACKGROUND = {
   builtin: true
 };
 
+const LANGUAGE_STATE_VERSION = 2;
+
 const DEFAULT_STATE = {
-  language: "zh",
+  language: "ja",
+  languageVersion: LANGUAGE_STATE_VERSION,
   eyebrow: "KanaWorks_AI",
-  headline: "水晶球影像",
+  headline: "水晶玉ビジョン",
   caption: "",
   textSize: 100,
   activeIndex: 0,
@@ -463,14 +466,23 @@ async function restoreState() {
     return;
   }
 
+  const storedState = stored.state || {};
+  const shouldMigrateLanguage = storedState.languageVersion !== LANGUAGE_STATE_VERSION;
   state = {
     ...structuredClone(DEFAULT_STATE),
-    ...stored.state,
+    ...storedState,
     effects: {
       ...DEFAULT_STATE.effects,
-      ...(stored.state?.effects || {})
+      ...(storedState.effects || {})
     }
   };
+  if (shouldMigrateLanguage) {
+    state.language = DEFAULT_STATE.language;
+    if (isKnownLocalizedHeadline(storedState.headline)) {
+      state.headline = LANGUAGES[DEFAULT_STATE.language].scene.headline;
+    }
+  }
+  state.languageVersion = LANGUAGE_STATE_VERSION;
   state.eyebrow = FIXED_EYEBROW;
   state.caption = "";
   state.textSize = clamp(Number(state.textSize) || DEFAULT_STATE.textSize, 50, 150);
@@ -644,6 +656,7 @@ function setLanguage(language) {
     return;
   }
   state.language = language;
+  state.languageVersion = LANGUAGE_STATE_VERSION;
   const scene = LANGUAGES[language].scene;
   state.eyebrow = FIXED_EYEBROW;
   state.headline = scene.headline;
@@ -965,6 +978,10 @@ function t(key) {
   return LANGUAGES[language].ui[key] || LANGUAGES.zh.ui[key] || key;
 }
 
+function isKnownLocalizedHeadline(headline) {
+  return Object.values(LANGUAGES).some((language) => language.scene.headline === headline);
+}
+
 function formatEffectOutput(key, value) {
   if (key === "orbSize") {
     return `${value}%`;
@@ -1116,6 +1133,7 @@ function saveProject() {
   const payload = {
     state: {
       ...state,
+      languageVersion: LANGUAGE_STATE_VERSION,
       eyebrow: FIXED_EYEBROW,
       caption: "",
       textSize: clamp(Number(state.textSize) || DEFAULT_STATE.textSize, 50, 150),
